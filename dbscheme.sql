@@ -6,7 +6,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
-/*dbuser is fictional throughout the text, rename with it your own db user name*/
+/*dbuser is fictional throughout the text, rename it with your own db user name*/
 DELIMITER $$
 CREATE DEFINER=`dbuser`@`localhost` PROCEDURE `addLog`(IN `event` VARCHAR(100), IN `obj` VARCHAR(100), IN `instring` VARCHAR(512), IN `outstring` VARCHAR(512), IN `intval` INT)
     NO SQL
