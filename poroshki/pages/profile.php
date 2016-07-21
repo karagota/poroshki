@@ -52,7 +52,7 @@ $_SESSION['name'] = $author['name']+ ' ' + $author['patronym'] + ' ' + $author['
 				  <!-- Nested media object -->
 				  <div class="media">
 					  <div >
-						 <img  class="media-object" data-src="holder.js/64x64/text::-)" src="<?php echo $root_path;?>images/avatars/<?php echo $_SESSION['user_id']; ?>.jpg?ok" style="display: block; margin: auto;" id="avatar" />
+						 <img  class="media-object" data-src="holder.js/64x64/text::-)" src="<?php echo $root_path;?>images/avatars/<?php echo $_SESSION['user_id']; ?>.jpg?<?php echo time();?>" style="display: block; margin: auto;" id="avatar" />
 					
 					 <br />
 					<span class="btn btn-primary fileinput-button btn-xs">

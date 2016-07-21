@@ -84,7 +84,7 @@ charset="utf-8"></script>
       <footer>
 	       
 		
-		<p>© <?php echo $labels['trademark'];?></p>
+		<p>© <?php echo $labels['trademark'];?> Текущее время <?php echo date("H:i:s");  ?></p>
 
 		
 		
