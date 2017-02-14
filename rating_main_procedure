@@ -1,0 +1,54 @@
+CREATE DEFINER=`dbuser`@`localhost` PROCEDURE `rating_main`(IN `subj_id` BIGINT UNSIGNED, IN `subj_type` VARCHAR(20) CHARSET utf8)
+    MODIFIES SQL DATA
+BEGIN
+	DECLARE _exclude nvarchar(20);
+    DECLARE _replace nvarchar(20);
+    DECLARE x INT UNSIGNED;
+    DECLARE reg_names nvarchar(1024);
+    DECLARE _rating nvarchar(256);
+    DECLARE rating_id INT UNSIGNED;
+    DECLARE _type INT UNSIGNED;
+    DECLARE _nom INT UNSIGNED;
+    
+	IF (subj_type='article') THEN
+    	SET _exclude='author';
+        SET _replace='СТАТЬЯ';
+        SET rating_id=1;
+        SET _type=1;
+        SET _nom=1;
+    ELSE
+    	SET _exclude='article';
+        SET _replace='АВТОР';
+        SET rating_id=2;
+        SET _type=0;
+        SET _nom=100;
+    END IF;
+    
+   # select _exclude,_replace,rating_id,_type;
+    
+	DELETE FROM params;
+    INSERT INTO params 
+    SELECT * FROM rating_params WHERE type!=_exclude;
+    UPDATE params SET value = REPLACE(value,_replace,subj_id);
+    #select * from params;
+   	SET x = 0;
+    REPEAT
+     SET x = x + 1;
+     SET reg_names = (SELECT GROUP_CONCAT(p.name SEPARATOR '|') from params p);
+     #select reg_names;
+     #select 'before';
+     #select * from params;
+     call solver_rating(reg_names);
+     
+     SET _rating = (select name from params where id=rating_id);
+     #select _rating;
+     UNTIL x > 10 or (CAST( _rating AS UNSIGNED ) !=0 or substring(_rating,1,1)='0' or substring(_rating,1,1)='-') 
+  	 END REPEAT;  
+     #select _rating as 'rating_just_after_repeat';
+     IF (CAST( _rating AS UNSIGNED ) !=0 or substring(_rating,1,1)='0'or substring(_rating,1,1)='-') then
+     	# select 'updating rating',_rating;
+  		 UPDATE rating SET rating = _rating	* _nom
+         where subject_type=_type and subject_id=subj_id;
+         #select concat('UPDATE rating SET rating = ',_rating,' where subject_type=',_type,' and subject_id=',subj_id);
+     END IF;
+END$$
